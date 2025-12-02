@@ -3,11 +3,11 @@ FROM maven:3.9.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copy Maven files
+# Copy Maven descriptor and sources
 COPY pom.xml .
 COPY src ./src
 
-# Build the JAR (no tests to make it faster)
+# Build the JAR (skip tests for faster build)
 RUN mvn -B clean package -DskipTests
 
 # ===== Stage 2: Run the application =====
@@ -21,3 +21,4 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
