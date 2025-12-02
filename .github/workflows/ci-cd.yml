@@ -17,8 +17,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Fix line endings (VERY IMPORTANT for mvnw)
-      - name: Convert mvnw to Unix format
+      # 2) Fix line endings and permissions for mvnw
+      - name: Convert mvnw to Unix format and make executable
         run: |
           sed -i 's/\r$//' mvnw
           chmod +x mvnw
@@ -30,7 +30,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      # 4) Build Spring Boot JAR (skip tests to be faster)
+      # 4) Build Spring Boot JAR (skip tests)
       - name: Build with Maven
         run: ./mvnw -B clean package -DskipTests
 
@@ -50,4 +50,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
